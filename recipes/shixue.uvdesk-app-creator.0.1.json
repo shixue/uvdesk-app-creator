@@ -1,0 +1,12 @@
+{
+    "manifests": {
+        "shixue/uvdesk-app-creator": {
+            "manifest": {
+                "bundles": {
+                    "UvdeskAppCreator\\CreatorBundle": ["dev"]
+                }
+            },
+            "ref": "41eee142db813da03834d558edbfbc1fd62dd9f6"
+        }
+    }
+}

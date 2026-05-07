@@ -1,0 +1,14 @@
+{
+    "recipes": {
+        "shixue/uvdesk-app-creator": [
+            "0.1"
+        ]
+    },
+    "branch": "main",
+    "is_contrib": true,
+    "_links": {
+        "repository": "github.com/shixue/uvdesk-app-creator",
+        "origin_template": "{package}:{version}@github.com/shixue/uvdesk-app-creator:main",
+        "recipe_template": "https://api.github.com/repos/shixue/uvdesk-app-creator/contents/recipes/{package_dotted}.{version}.json?ref=main"
+    }
+}
