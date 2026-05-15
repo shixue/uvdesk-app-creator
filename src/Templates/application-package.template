@@ -1,0 +1,77 @@
+<?php
+
+namespace {{namespace}};
+
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use {{namespace}}\DependencyInjection\Configuration;
+use Webkul\UVDesk\ExtensionFrameworkBundle\Definition\Package\ConfigurablePackageInterface;
+use Webkul\UVDesk\ExtensionFrameworkBundle\Definition\Package\ContainerBuilderAwarePackageInterface;
+use Webkul\UVDesk\ExtensionFrameworkBundle\Definition\Package\PackageInterface;
+use Webkul\UVDesk\ExtensionFrameworkBundle\Definition\Package\PackageMetadata;
+
+class {{className}}Package implements ContainerBuilderAwarePackageInterface,ConfigurablePackageInterface
+{
+    protected $metadata;
+    protected $configurationFilepath='';
+    protected $configurationParameters=[];
+
+
+    public function process(ContainerBuilder $container)
+    {
+    }
+
+    public function setMetadata(PackageMetadata $metadata) : PackageInterface
+    {
+        $this->metadata = $metadata;
+        return $this;
+    }
+
+    public function getMetadata() : PackageMetadata
+    {
+        return $this->metadata;
+    }
+
+    public function getConfiguration() : ConfigurationInterface
+    {
+        return new Configuration();
+    }
+
+    public function setConfigurationFilepath(string $configurationFilepath) : ConfigurablePackageInterface
+    {
+        $this->configurationFilepath = $configurationFilepath;
+        return $this;
+    }
+
+    public function getConfigurationFilepath() : string
+    {
+        return $this->configurationFilepath;
+    }
+
+    public function setConfigurationParameters(array $configurationParameters) : ConfigurablePackageInterface
+    {
+        $this->configurationParameters = $configurationParameters;
+        return $this;
+    }
+
+    public function getConfigurationParameters() : array
+    {
+        return $this->configurationParameters;
+    }
+
+    public function install()
+    {
+        // extension config
+        $data = file_get_contents(__DIR__ . '/Resources/config/extension.yaml');
+        file_put_contents($this->configurationFilepath, $data);
+        // translation file
+        $transDir = __DIR__ . '/Resources/translations/';
+        $targetDir = dirname(dirname(dirname($this->configurationFilepath))) . '/translations/';
+        if (is_dir($transDir) && is_dir($targetDir) && is_writable($targetDir)) {
+            $files = array_diff(scandir($transDir) ?: [], ['.', '..']);
+            foreach ($files as $file) {
+                copy($transDir . $file, $targetDir . $file);
+            }
+        }
+    }
+}

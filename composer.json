@@ -1,0 +1,22 @@
+{
+    "name": "shixue/uvdesk-app-creator",
+    "description": "create uvdesk application skeleton.",
+    "type": "symfony-bundle",
+    "keywords": ["uvdesk", "uvdesk apps"],
+    "homepage": "https://github.com/shixue/uvdesk-app-creator",
+    "license": "MIT",
+    "version": "0.1",
+    "authors": [
+        {
+            "name": "shixue",
+            "homepage":"https://github.com/shixue"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "UvdeskAppCreator\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}

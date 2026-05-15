@@ -1,0 +1,65 @@
+<?php
+
+namespace {{namespace}}\Controller;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use {{namespace}}\Application\ApplicationMetadata;
+use Webkul\UVDesk\CoreFrameworkBundle\Services\UserService;
+
+class SettingsController extends BaseController
+{
+    public function __construct(private UserService $userService, private KernelInterface $kernel, private ApplicationMetadata $metadata, private TranslatorInterface $translator){}
+
+    public function getSettingsXHR(Request $request): JsonResponse
+    {
+        $qualifiedName = $this->metadata->getQualifiedName();
+        $filePath = $this->kernel->getProjectDir() . '/config/extensions/'. $qualifiedName .'.yaml';
+        if (!file_exists($filePath)) {
+            throw new NotFoundHttpException($this->translator->trans('Warning! resource not found.') . $this->translator->trans('File') .': '. $filePath);
+        }
+        $enabled = true;
+        foreach (file($filePath) as $val) {
+            $exploded = explode(":", trim($val));
+            if ($exploded[0] == 'enabled') {
+                $enabled = str_contains($exploded[1], 'true');
+            }
+        }
+        return $this->json(['enabled' => $enabled]);
+    }
+
+    public function updateSettingsXHR(Request $request): Response
+    {
+        if (! $this->userService->isAccessAuthorized('ROLE_ADMIN')) {
+            // Insufficient account privileges
+            throw new AccessDeniedException($this->translator->trans('No') .' '. $this->translator->trans('Privileges'));
+        }
+
+        $qualifiedName = $this->metadata->getQualifiedName();
+        $filePath = $this->kernel->getProjectDir() . '/config/extensions/'. $qualifiedName .'.yaml';
+        if (!file_exists($filePath)) {
+            throw new NotFoundHttpException($this->translator->trans('Warning! resource not found.') . $this->translator->trans('File') .': '. $filePath);
+        }
+        $content = '';
+        $enabled = true;
+        foreach (file($filePath) as $val) {
+            $exploded = explode(":", $val);
+            if (str_contains($exploded[0], 'enabled')) {
+                // update
+                [$enabled, $status] = str_contains($exploded[1], 'true') ? [false, 'false'] : [true, 'true'];
+                $content .= "{$exploded[0]}: $status";
+            } else {
+                $content .= $val;
+            }
+        }
+        $content .= "\n";
+        file_put_contents($filePath, $content);
+
+        return $this->json(['enabled' => $enabled]);
+    }
+}

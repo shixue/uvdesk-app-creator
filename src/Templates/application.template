@@ -1,0 +1,32 @@
+<?php
+
+namespace {{namespace}}\Application;
+
+use Webkul\UVDesk\ExtensionFrameworkBundle\Application\Routine\RenderDashboardRoutine;
+use Webkul\UVDesk\ExtensionFrameworkBundle\Definition\Application\Application;
+
+class {{className}}Application extends Application
+{
+    public static function getMetadata() : ApplicationMetadata
+    {
+        return new ApplicationMetadata();
+    }
+
+    public static function getSubscribedEvents() : array
+    {
+        /** @see \Webkul\UVDesk\ExtensionFrameworkBundle\Controller\Application::dashboard() */
+        return [
+            RenderDashboardRoutine::NAME => [
+                ['onDashboardEvents', 10],
+            ],
+        ];
+    }
+
+    public function onDashboardEvents(RenderDashboardRoutine $event, string $eventName, $eventDispatcher)
+    {
+        /** @see \Webkul\UVDesk\ExtensionFrameworkBundle\EventListener\Kernel::configureTwigResources() */
+        $metadata = $this->package->getMetadata();
+        $namespace = sprintf("_uvdesk_extension_%s_%s", str_replace('-', '_', $metadata->getVendor()), str_replace('-', '_', $metadata->getPackage()));
+        $event->setTemplateReference("@{$namespace}//dashboard.html.twig");
+    }
+}

@@ -1,0 +1,10 @@
+{{qualifiedName}}_app_home:
+    path: /
+
+{{qualifiedName}}_app_settings_xhr:
+    path: /settings/xhr
+    controller: {{namespace}}\Controller\SettingsController::getSettingsXHR
+
+{{qualifiedName}}_app_settings_update_xhr:
+    path: /settings_update/xhr
+    controller: {{namespace}}\Controller\SettingsController::updateSettingsXHR

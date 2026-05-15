@@ -1,0 +1,12 @@
+{
+    "name": "{{name}}",
+    "description": "Uvdesk application created by Uvdesk App Creator",
+    "type": "uvdesk-module",
+    "authors": "Uvdesk App Creator",
+    "autoload": {
+        "{{namespace}}\\": "src/"
+    },
+    "package": {
+        "{{namespace}}\\{{className}}Package": ["all"]
+    }
+}

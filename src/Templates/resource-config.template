@@ -1,0 +1,17 @@
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    {{namespace}}\:
+        resource: '../../*'
+        exclude: '../../{DependencyInjection,Entity,Package,Templates,Migrations,Tests}'
+        public: true
+
+    {{namespace}}\Application\{{className}}Application:
+        class: {{namespace}}\Application\{{className}}Application
+        tags:
+            - { name: 'Webkul\UVDesk\ExtensionFrameworkBundle\Definition\Application\ApplicationInterface' }
+        public: true

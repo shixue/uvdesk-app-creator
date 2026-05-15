@@ -1,0 +1,28 @@
+<?php
+
+namespace {{namespace}}\Application;
+
+use Webkul\UVDesk\ExtensionFrameworkBundle\Definition\Application\ApplicationMetadata as AbstractApplicationMetadata;
+
+class ApplicationMetadata extends AbstractApplicationMetadata
+{
+    public $extensionPackageName = '{{name}}';
+
+
+    public function getName() : string
+    {
+        return 'Change name in ApplicationMetadata.php';
+    }
+
+    public function getQualifiedName() : string
+    {
+        return str_replace(['/', '-'], '_', $this->extensionPackageName);
+    }
+
+    public function getIconPath() : string
+    {
+        list($vendorName, $packageName) = explode('/', $this->extensionPackageName);
+        $icon = "/community-packages/{$vendorName}/{$packageName}/images/cover.png";
+        return file_exists('.' .$icon) ? $icon : '/bundles/uvdeskcoreframework/images/uv-avatar-batman.png';
+    }
+}

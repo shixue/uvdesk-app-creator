@@ -1,0 +1,22 @@
+<?php
+
+namespace {{namespace}}\Controller;
+
+
+class BaseController extends \App\Controller\BaseController
+{
+    /**
+     * namespace: @ + _uvdesk_extension_ + app_qualified_name
+     * @see \Webkul\UVDesk\ExtensionFrameworkBundle\EventListener\Kernel::configureTwigResources()
+     */
+    protected string $tplNamespace = '@_uvdesk_extension_{{qualifiedName}}//';
+
+    protected function renderView(string $view, array $parameters = []): string
+    {
+        if (!$this->container->has('twig')) {
+            throw new \LogicException('You cannot use the "renderView" method if the Twig Bundle is not available. Try running "composer require symfony/twig-bundle".');
+        }
+
+        return $this->container->get('twig')->render(($view[0] === '@' ? '' :  $this->tplNamespace) . $view, $parameters);
+    }
+}
