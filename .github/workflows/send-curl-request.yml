@@ -1,0 +1,25 @@
+
+name: Send curl request on release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  send-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Send curl request
+        run: |
+          curl -X POST 'https://packagist.org/api/update-package?username=Junior%20Lau&apiToken=ece4f02d76c5b0 \
+            -H 'content-type:application/json' \
+            -d'{
+              "repository":{"url":"https://packagist.org/packages/shixue/uvdesk-app-creator"},
+              "message": "New release triggered: ${{ github.ref_name }}",
+              "release_tag": "${{ github.ref }}",
+              "author": "${{ github.actor }}",
+              "timestamp": "$(date -u)"
+            }'
